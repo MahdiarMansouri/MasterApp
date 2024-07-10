@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Page</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <script src="../static/js/7cef6a35b3.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="exam_main_container">
+    <!--    <div class="Prev_btn">-->
+    <!--        <i class="fa-solid fa-angle-left fa-lg"></i>-->
+    <!--    </div>-->
+    <div class="central_exam_content">
+        <label class="Exam_label">Image <span class="Exam_counter">0</span></label>
+        <div class="exam_image_content">
+            <img src="" alt="exam image" class="Exam_image" id="0">
+        </div>
+        <div class="exam_buttons_content">
+            <button class="BTN Corallo_btn">Corallococcus</button>
+            <button class="BTN Myxo_btn">Myxococcus</button>
+        </div>
+        <button id="menu_button" class="menu_btn" onclick="window.location.href='/main';">Menu</button>
+    </div>
+    <!--    <div class="Next_btn">-->
+    <!--        <i class="fa-solid fa-angle-right fa-lg"></i>-->
+    <!--    </div>-->
+
+    <ul class="exam_UL" id="fileList">
+        {% for file in files %}
+        <li>{{ file }}</li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+
+
+    $(document).ready(function () {
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/exam')
+                .then(response => response.json())
+                .then(files => {
+                    const fileList = document.getElementById('fileList');
+                    files.forEach(file => {
+                        const li = document.createElement('li');
+                        li.textContent = file;
+                        fileList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error fetching files:', error));
+        });
+
+        let filesName = [];
+        let getId = 0;
+        let Answers = [];
+
+        $('.exam_UL li').each(function () {
+            filesName.push($(this).text());
+        });
+
+        $('.Exam_image').attr('src', '../static/images/exam_images/' + filesName[0]);
+
+
+        // $(document).on('click', '.fa-angle-right', function () {
+        //     let getWidth = $('.exam_image_content').width();
+        //     $('.exam_buttons_content').css('width', getWidth);
+        //
+        //     getId = parseInt($('.Exam_image').attr('id'));
+        //
+        //     getId = (getId + 1) % filesName.length;
+        //
+        //     $('.Exam_image').attr('id', getId);
+        //
+        //     $('.Exam_image').attr('src', '../static/images/exam_images/' + filesName[getId]);
+        //     let counter = parseInt($('.Exam_counter').text());
+        //     if (counter == filesName.length - 1) {
+        //         $('.Next_btn').addClass('disabledvalue');
+        //     } else {
+        //         $('.Exam_counter').text(counter + 1);
+        //     }
+        // });
+        //
+        // $(document).on('click', '.fa-angle-left', function () {
+        //     let getWidth = $('.exam_image_content').width();
+        //     $('.exam_buttons_content').css('width', getWidth);
+        //
+        //     getId = parseInt($('.Exam_image').attr('id'));
+        //     if (getId < 1) {
+        //         getId = filesName.length
+        //     }
+        //     getId = (getId - 1) % filesName.length;
+        //     $('.Exam_image').attr('id', getId);
+        //
+        //     $('.Exam_image').attr('src', '../static/images/exam_images/' + filesName[getId]);
+        //
+        //     let counter = parseInt($('.Exam_counter').text());
+        //     if (counter == 0) {
+        //         $('.Next_btn').addClass('disabledvalue');
+        //     } else {
+        //         $('.Exam_counter').text(counter - 1);
+        //     }
+        //
+        // });
+
+        function NextImage(btnName) {
+            let getWidth = $('.exam_image_content').width();
+            $('.exam_buttons_content').css('width', getWidth);
+
+            getId = parseInt($('.Exam_image').attr('id'));
+
+            getId = (getId + 1) % filesName.length;
+
+            $('.Exam_image').attr('id', getId);
+
+            Answers.push([filesName[getId], btnName]);
+
+
+            $('.Exam_image').attr('src', '../static/images/exam_images/' + filesName[getId]);
+            let counter = parseInt($('.Exam_counter').text());
+            if ((counter + 1) < filesName.length) {
+                $('.Exam_counter').text(counter + 1);
+            } else {
+                $('.Exam_label').remove();
+                $('.exam_image_content').remove();
+                $('.exam_buttons_content').remove();
+                $('.menu_btn').remove();
+                let btn = `<div class="Exam_submit_content"><input type="submit" class="SubmitExam" name="submit" value="Submit"/></div>`;
+                $('.central_exam_content').append(btn);
+            }
+        }
+
+        $(document).on('click', '.Myxo_btn', function () {
+
+            NextImage("Myxo");
+        })
+
+        $(document).on('click', '.Corallo_btn', function () {
+            NextImage("Corallo");
+        })
+
+        $(document).on('click', '.SubmitExam', function () {
+            $.ajax({
+                url: '/save-array',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({files:Answers}),
+                success: function (response) {
+                    console.log('Form submitted successfully:', response);
+                    window.location.href = '/';
+                },
+                error: function (error) {
+                    console.error('Error sending array:', error);
+                }
+            });
+        })
+
+
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body class="bodyheight">
+<div class="container">
+    <div class="Sidebar">
+        <div class="Title_content">
+            <span class="Title_span">Upload and Process Image</span>
+        </div>
+        <div class="Form_content">
+            <form id="upload-form">
+                <input type="file" id="file-input" name="file">
+                <button type="submit" class="BTN_Upload">Upload</button>
+            </form>
+            <div id="original-container">
+                <img id="original-image" class="Original_image" src="" alt="Original Image">
+            </div>
+            <button id="process-button" style="display: none;">Process</button>
+            <button id="menu-button" class="menu_btn" onclick="window.location.href='/main';">Menu</button>
+        </div>
+    </div>
+    <div class="main_container">
+        <div id="images">
+            <div class="Main_image_content">
+                <label for="detected-image">Detected Image</label>
+                <img id="detected-image" class="Main_image" src="" alt="Detected Image">
+                <div class="Report_content"><p id="accuracy"></p></div>
+            </div>
+            <div class="Two_images">
+                <div class="Sub_images_content">
+                    <label for="segmented-image">Segmented Image</label>
+                    <img id="segmented-image" class="sub_images" src="" alt="Segmented Image">
+                </div>
+                <div class="Sub_images_content">
+                    <label for="binary-thresh-image">binary threshold image </label>
+                    <img id="binary-thresh-image" class="sub_images" src="" alt="Binary Threshold Image">
+                </div>
+            </div>
+        </div>
+        <div id="Spinner_content" class="Spinner_Div">
+            <div id="Spinner"></div>
+        </div>
+    </div>
+
+</div>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
