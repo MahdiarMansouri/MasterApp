@@ -28,9 +28,9 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # MySQL database configuration
 db_config = {
     'user': 'root',
-    'password': 'root123',
-    'host': 'localhost',
-    'database': 'masterdb'
+    'password': 'lnledwZHN42wLqCv6JFn',
+    'host': 'remote.runflare.com:30168',
+    'database': 'mysqlguo_db'
 }
 
 # Generate a secure secret key if not set in environment
