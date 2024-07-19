@@ -29,9 +29,9 @@ def create_app():
     # MySQL database configuration
     db_config = {
         'user': 'root',
-        'password': 'root123',
-        'host': 'localhost',
-        'database': 'masterdb'
+        'password': 'lnledwZHN42wLqCv6JFn',
+        'host': 'remote.runflare.com:30168',
+        'database': 'mysqlguo_db'
     }
 
     # Generate a secure secret key if not set in environment
@@ -328,4 +328,4 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)
