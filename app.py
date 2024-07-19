@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, render_template, request, jsonify, url_for, flash, session, redirect
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import smtplib
@@ -31,7 +33,6 @@ db_config = {
     'database': 'masterdb'
 }
 
-
 # Generate a secure secret key if not set in environment
 if not os.getenv('FLASK_SECRET_KEY'):
     os.environ['FLASK_SECRET_KEY'] = secrets.token_hex(32)
@@ -39,6 +40,19 @@ if not os.getenv('FLASK_SECRET_KEY'):
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 s = URLSafeTimedSerializer(app.secret_key)
+
+
+class User:
+    def __init__(self, id, first_name, last_name, email, password, verfied):
+        self.id = id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.password = password
+        self.verified = verfied
+
+    def __repr__(self):
+        return json.dumps(self.__dict__)
 
 
 # Database setup
@@ -73,9 +87,9 @@ def process_image(filepath, filename):
         transforms.Resize((390, 390))
     ])
 
-    segmented_image = segment2(original_image, transform, shape)
+    segmented_image = segment(original_image, transform, shape)
     binary_thresh, _, cropped_images = detect(segmented_image, original_image)
-    labels, result, predict_label = acc_calculator(cropped_images)
+    labels, result, predict_label = acc_calculator(cropped_images, type='area')
     _, detected_image, _ = detect(segmented_image, original_image, labels=labels, label_annotate=True)
 
     # Save images
@@ -109,12 +123,15 @@ def login():
         if user:
             if user['verified']:
                 session['user_id'] = user['id']
+                session.permanent = True
+                # user_id = user['id']
                 return redirect(url_for('index'))
             else:
                 flash('Email not verified. Please check your email.', 'warning')
         else:
             flash('Invalid credentials', 'danger')
     return render_template('login.html')
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -153,6 +170,7 @@ def signup():
         return redirect(url_for('login'))
     return render_template('signup.html')
 
+
 @app.route('/confirm/<token>')
 def confirm_email(token):
     try:
@@ -172,10 +190,23 @@ def confirm_email(token):
     return redirect(url_for('login'))
 
 
-
 @app.route('/main')
 def index():
-    return render_template('main.html')
+    user_id = session.get('user_id')
+    db_config = {
+        'user': 'root',
+        'password': 'root123',
+        'host': 'localhost',
+        'database': 'masterdb'
+    }
+
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE id = %s", [user_id])
+    user = cursor.fetchone()
+    user = User(*user)
+
+    return render_template('main.html', user=user)
 
 
 @app.route('/exam')
@@ -184,20 +215,15 @@ def exam():
     for file in os.listdir('static/images/exam_images'):
         if file.endswith('.jpg'):
             files.append(file)
+            print(file)
     print(files)
     return render_template('exam.html', files=files)
 
 
-@app.route('/test')
-def test():
-    return render_template('index.html')
-
-
-@app.route('/save-array', methods=['POST'])
-def save_array():
-    data = request.get_json()
-    files = data['files']
-    print(files)
+@app.route('/show-result')
+def show_result():
+    user_id = session.get('user_id')
+    answers = session.get('answers')
 
     db_config = {
         'user': 'root',
@@ -208,11 +234,54 @@ def save_array():
 
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE id = %s", [user_id])
+    user = cursor.fetchone()
+    user = User(*user)
+    print(user)
+
+    answers = json.loads(answers)
+    print(answers)
+
+    list_length = len(answers)
+
+    return render_template('show_result.html', user=user, list_length=list_length, answers=answers)
+
+
+@app.route('/test')
+def test():
+    return render_template('test.html')
+
+
+@app.route('/about-me')
+def about_me():
+    return render_template('about_me.html')
+
+
+@app.route('/save-array', methods=['POST'])
+def save_array():
+    data = request.get_json()
+    files = data['files']
+    user_id = session.get('user_id')
+    answers = json.dumps(files, indent=4)
+    session['answers'] = answers
+    print(type(answers))
+
+    db_config = {
+        'user': 'root',
+        'password': 'root123',
+        'host': 'localhost',
+        'database': 'masterdb'
+    }
+
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE id = %s", [user_id])
+    user = cursor.fetchone()
+    user = User(*user)
 
     try:
-
-        cursor.execute("INSERT INTO exam_results (first_name, last_name, email, exam_results) VALUES (%s, %s, %s, %s)",
-                       ('mahdiar', 'mansouri', '<EMAIL>', str(files)))
+        cursor.execute("INSERT INTO exam_results (id, first_name, last_name,  exam_results) VALUES (%s,%s, %s, %s)",
+                       (user_id, user.first_name, user.last_name, answers))
         for file_name in files:
             cursor.execute("INSERT INTO test_table (image, result) VALUES (%s, %s)", (file_name[0], file_name[1]))
 

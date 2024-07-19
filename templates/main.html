@@ -2,23 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
 </head>
 <body>
 <div class="main_page_container">
     <div class="central_content">
-    <span class="Span_content">
-        mahdiar hastam mokhlesam!!
-    </span>
-        <div class="Keys_content">
-            <button class="BTN BTN_test" onclick="window.location.href='/test';">Test</button>
-            <button class="BTN BTN_exam2" onclick="window.location.href='/exam';">Exam</button>
+        <div class="header">
+            <h1>Welcome, Mahdiar!</h1>
+            <p> <em>"Detection and Classification of Myxococcus and Corallococcus
+                from Microscope Images using CNN-Based Neural Networks."</em></p>
         </div>
+        <div class="content">
+            <p>Hello and welcome to my project website! I am Mahdiar Mansouri, and I am excited to share my work with
+                you.</p>
+            <p>I created this website to make my project user-friendly and accessible. You can explore the following
+                features:</p>
+            <ul>
+                <li><i class="fas fa-vial"></i> <strong>Test:</strong> Upload your microscopic images of Myxococcus and
+                    Corallococcus species to test my model.
+                </li>
+                <li><i class="fas fa-clipboard-list"></i> <strong>Exam:</strong> If you are an expert in classifying
+                    these species, I would appreciate your participation in my exam.
+                </li>
+                <li><i class="fas fa-user"></i> <strong>About Me:</strong> Learn more about my background and
+                    qualifications by reading my resume.
+                </li>
+            </ul>
+            <div class="buttons">
+                <button class="btn" onclick="window.location.href='/test';"><i class="fas fa-vial"></i> Test</button>
+                <button class="btn" onclick="window.location.href='/exam';"><i class="fas fa-clipboard-list"></i> Exam
+                </button>
+                <button class="btn" onclick="window.location.href='/about-me';"><i class="fas fa-user"></i> About Me
+                </button>
+            </div>
+        </div>
+        <footer>
+            <p>Thank you for your interest in my project!</p>
+        </footer>
     </div>
 </div>
-<script src="../static/js/scripts.js"></script>
 </body>
 </html>

@@ -3,42 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Exam Page</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="../static/css/exam.css">
     <script src="../static/js/7cef6a35b3.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="exam_main_container">
-    <!--    <div class="Prev_btn">-->
-    <!--        <i class="fa-solid fa-angle-left fa-lg"></i>-->
-    <!--    </div>-->
-    <div class="central_exam_content">
-        <label class="Exam_label">Image <span class="Exam_counter">0</span></label>
-        <div class="exam_image_content">
-            <img src="" alt="exam image" class="Exam_image" id="0">
+<div class="main_page_container">
+    <div class="exam_main_container">
+        <div class="central_exam_content">
+            <label class="Exam_label">Image <span class="Exam_counter">0</span></label>
+            <div class="exam_image_content">
+                <img src="" alt="exam image" class="Exam_image" id="0">
+            </div>
+            <div class="exam_buttons_content">
+                <button class="btn Corallo_btn">Corallococcus</button>
+                <button class="btn Myxo_btn">Myxococcus</button>
+            </div>
+            <button id="menu_button" class="btn menu_btn" onclick="window.location.href='/main';"><i class="fas fa-bars"></i> Menu</button>
         </div>
-        <div class="exam_buttons_content">
-            <button class="BTN Corallo_btn">Corallococcus</button>
-            <button class="BTN Myxo_btn">Myxococcus</button>
-        </div>
-        <button id="menu_button" class="menu_btn" onclick="window.location.href='/main';">Menu</button>
+        <ul class="exam_UL" id="fileList" style="display: none;">
+            {% for file in files %}
+            <li>{{ file }}</li>
+            {% endfor %}
+        </ul>
     </div>
-    <!--    <div class="Next_btn">-->
-    <!--        <i class="fa-solid fa-angle-right fa-lg"></i>-->
-    <!--    </div>-->
-
-    <ul class="exam_UL" id="fileList">
-        {% for file in files %}
-        <li>{{ file }}</li>
-        {% endfor %}
-    </ul>
 </div>
 <script>
-
-
     $(document).ready(function () {
-
         document.addEventListener('DOMContentLoaded', function () {
             fetch('/exam')
                 .then(response => response.json())
@@ -55,7 +47,7 @@
 
         let filesName = [];
         let getId = 0;
-        let Answers = [];
+        let Answers = {};
 
         $('.exam_UL li').each(function () {
             filesName.push($(this).text());
@@ -63,60 +55,34 @@
 
         $('.Exam_image').attr('src', '../static/images/exam_images/' + filesName[0]);
 
-
-        // $(document).on('click', '.fa-angle-right', function () {
-        //     let getWidth = $('.exam_image_content').width();
-        //     $('.exam_buttons_content').css('width', getWidth);
-        //
-        //     getId = parseInt($('.Exam_image').attr('id'));
-        //
-        //     getId = (getId + 1) % filesName.length;
-        //
-        //     $('.Exam_image').attr('id', getId);
-        //
-        //     $('.Exam_image').attr('src', '../static/images/exam_images/' + filesName[getId]);
-        //     let counter = parseInt($('.Exam_counter').text());
-        //     if (counter == filesName.length - 1) {
-        //         $('.Next_btn').addClass('disabledvalue');
-        //     } else {
-        //         $('.Exam_counter').text(counter + 1);
-        //     }
-        // });
-        //
-        // $(document).on('click', '.fa-angle-left', function () {
-        //     let getWidth = $('.exam_image_content').width();
-        //     $('.exam_buttons_content').css('width', getWidth);
-        //
-        //     getId = parseInt($('.Exam_image').attr('id'));
-        //     if (getId < 1) {
-        //         getId = filesName.length
-        //     }
-        //     getId = (getId - 1) % filesName.length;
-        //     $('.Exam_image').attr('id', getId);
-        //
-        //     $('.Exam_image').attr('src', '../static/images/exam_images/' + filesName[getId]);
-        //
-        //     let counter = parseInt($('.Exam_counter').text());
-        //     if (counter == 0) {
-        //         $('.Next_btn').addClass('disabledvalue');
-        //     } else {
-        //         $('.Exam_counter').text(counter - 1);
-        //     }
-        //
-        // });
-
+        let list_answers = []
         function NextImage(btnName) {
+            let dict_answers = {}
             let getWidth = $('.exam_image_content').width();
             $('.exam_buttons_content').css('width', getWidth);
 
             getId = parseInt($('.Exam_image').attr('id'));
 
+            Answers[filesName[getId]] = btnName;
+
+            dict_answers['user_answer'] = btnName;
+            dict_answers['image_path'] = '../static/images/exam_images/' + filesName[getId];
+            let part1 = filesName[getId].split('_');
+            let part2 = part1[1].split('.');
+            let answer ;
+            if (part2[0] == 'c'){
+                answer = 'Corallococcus'
+            }else if (part2[0] == 'm'){
+                answer = 'Myxococcus';
+            }else{
+                answer = "error";
+            }
+            dict_answers['correct_answer'] = answer;
+            list_answers.push(dict_answers);
+
             getId = (getId + 1) % filesName.length;
 
             $('.Exam_image').attr('id', getId);
-
-            Answers.push([filesName[getId], btnName]);
-
 
             $('.Exam_image').attr('src', '../static/images/exam_images/' + filesName[getId]);
             let counter = parseInt($('.Exam_counter').text());
@@ -127,40 +93,36 @@
                 $('.exam_image_content').remove();
                 $('.exam_buttons_content').remove();
                 $('.menu_btn').remove();
-                let btn = `<div class="Exam_submit_content"><input type="submit" class="SubmitExam" name="submit" value="Submit"/></div>`;
+                let btn = `<div class="Exam_submit_content"><input type="submit" class="btn SubmitExam" name="submit" value="Submit"/></div>`;
                 $('.central_exam_content').append(btn);
             }
         }
 
         $(document).on('click', '.Myxo_btn', function () {
-
-            NextImage("Myxo");
+            NextImage("Myxococcus");
         })
 
         $(document).on('click', '.Corallo_btn', function () {
-            NextImage("Corallo");
+            NextImage("Corallococcus");
         })
 
         $(document).on('click', '.SubmitExam', function () {
+            let test = list_answers;
             $.ajax({
                 url: '/save-array',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({files:Answers}),
+                data: JSON.stringify({files:list_answers}),
                 success: function (response) {
                     console.log('Form submitted successfully:', response);
-                    window.location.href = '/';
+                    window.location.href = '/show-result';
                 },
                 error: function (error) {
                     console.error('Error sending array:', error);
                 }
             });
         })
-
-
     });
-
-
 </script>
 </body>
 </html>

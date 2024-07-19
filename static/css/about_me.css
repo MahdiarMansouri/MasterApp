@@ -1,0 +1,237 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes progressBar {
+    from {
+        width: 0;
+    }
+    to {
+        width: var(--progress-width);
+    }
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 80%;
+    max-width: 1000px;
+    margin: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.profile img {
+    border-radius: 50%;
+    margin-right: 20px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+.profile-info h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #007bff;
+}
+
+.profile-info p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.about {
+    width: 100%;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.about h2, .skills h2, .resume-section h2 {
+    font-size: 1.8em;
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.about p {
+    margin: 10px 0;
+    line-height: 1.6;
+    color: #555;
+}
+
+.skills {
+    margin-bottom: 20px;
+}
+
+.skills .skill {
+    margin-bottom: 15px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.skills .skill span {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.skills .bar {
+    background-color: #ddd;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.skills .bar .progress {
+    height: 20px;
+    background-color: #007bff;
+    border-radius: 10px;
+    width: 0;
+    --progress-width: 0;
+    animation: progressBar 2s ease-in-out forwards;
+}
+
+.skills .bar .progress[data-width="90"] {
+    --progress-width: 90%;
+}
+
+.skills .bar .progress[data-width="85"] {
+    --progress-width: 85%;
+}
+
+.skills .bar .progress[data-width="75"] {
+    --progress-width: 75%;
+}
+
+.skills .bar .progress[data-width="80"] {
+    --progress-width: 80%;
+}
+
+.resume-section {
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.resume-item {
+    margin-bottom: 20px;
+}
+
+.resume-item h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.4em;
+    color: #007bff;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.resume-item p {
+    margin: 5px 0;
+    line-height: 1.6;
+    color: #555;
+}
+
+.resume-item ul {
+    padding-left: 20px;
+    color: #555;
+}
+
+.keys_content {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    display: inline-block;
+    margin-top: 10px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.btn:hover {
+    background: linear-gradient(to right, #2575fc, #6a11cb);
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile, .about {
+        width: 100%;
+        text-align: center;
+    }
+
+    .profile-info h1 {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .profile img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-info h1 {
+        font-size: 1.2em;
+    }
+}

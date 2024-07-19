@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="main_page_container">
+    <div class="sidebar">
+        <div class="title_content">
+            <h2>Upload and Process Image</h2>
+        </div>
+        <div class="form_content">
+            <form id="upload-form">
+                <div class="form-group">
+                    <label for="file-input"><i class="fas fa-upload"></i> Choose an image:</label>
+                    <input type="file" id="file-input" name="file" required>
+                </div>
+                <button class="btn" type="submit"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+            </form>
+            <div id="original-container" style="display: none;">
+                <img id="original-image" class="original_image" src="" alt="Original Image">
+            </div>
+            <button id="process-button" class="btn" style="display: none;"><i class="fas fa-cogs"></i> Process</button>
+            <button id="menu-button" class="btn" onclick="window.location.href='/main';"><i class="fas fa-bars"></i> Menu</button>
+        </div>
+    </div>
+    <div class="main_container" id="main-container" style="display: none;">
+        <div id="images">
+            <div class="main_image_content">
+                <label for="detected-image">Detected Image</label>
+                <img id="detected-image" class="main_image" src="" alt="Detected Image">
+                <div class="report_content"><p id="accuracy"></p></div>
+            </div>
+            <div class="two_images">
+                <div class="sub_images_content">
+                    <label for="segmented-image">Segmented Image</label>
+                    <img id="segmented-image" class="sub_images" src="" alt="Segmented Image">
+                </div>
+                <div class="sub_images_content">
+                    <label for="binary-thresh-image">Binary Threshold Image</label>
+                    <img id="binary-thresh-image" class="sub_images" src="" alt="Binary Threshold Image">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="spinner_content" class="spinner_div">
+        <div id="spinner"></div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

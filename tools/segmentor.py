@@ -10,15 +10,17 @@ def segment(image, transform, shape):
     image = image.to(device)
 
     model = UNet(n_channels=3, n_classes=1)
+    model_path = r'E:\PycharmProjects\MasterApp\model\DL_models\best_segment_model.pth'
+    model = torch.load(model_path)
     model = model.to(device)
-    model_path = 'E:\PycharmProjects\MainMasterApp\model\DL_models\detection_unet_model.pth'
-    model_weights = torch.load(model_path, map_location=torch.device('cpu'))
-    model.load_state_dict(model_weights)
+    # model.load_state_dict(model_weights)
     model.eval()
 
     with torch.no_grad():
         segmented_image = model(image)
-        segmented_image = segmented_image.to('cpu')
+        preds = torch.sigmoid(segmented_image)
+        preds = (preds > 0.5).float()
+        segmented_image = preds.to('cpu')
 
     segmented_image = segmented_image.squeeze().numpy()
     segmented_image = (
@@ -31,14 +33,18 @@ def segment2(image, transform, shape):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print('your device is: ', device)
     image = transform(image).unsqueeze(0)
-    image = image.to('cpu')
+    image = image.to(device)
+    print(image.shape)
 
-    model_path = 'E:\PycharmProjects\MainMasterApp\model\DL_models\segmented_model5.pth'
-    model = torch.load(model_path, map_location=torch.device('cpu'))
+    model = UNet(n_channels=3, n_classes=1)
+    model_path = r'E:\PycharmProjects\MasterApp\model\DL_models\best_segment_model.pth'
+    model_weights = torch.load(model_path)
+    model.load_state_dict(model_weights)
     model.eval()
+    model = model.to(device)
 
     with torch.no_grad():
-        output = model(image)['out']
+        output = model(image)
         print(output)
         print(output.shape)
 

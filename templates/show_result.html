@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result Page</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/show_result.css">
+</head>
+<body>
+<div class="main_page_container">
+    <div class="result_main_div">
+        <h2>Results</h2>
+        <div class="result_table_div">
+            <ul class="result_table">
+                <li class="li_header">
+                    <span class="result_th">Image</span>
+                    <span class="result_th">Your Answer</span>
+                    <span class="result_th">Correct Answer</span>
+                </li>
+                {% for i in range(list_length) %}
+                <li class="result_tbody_tr">
+                    <div class="result_image_td">
+                        <img src="{{ answers[i]['image_path'] }}" alt="Image" class="result_image">
+                    </div>
+                    <span class="result_your_answer">{{ answers[i]['user_answer'] }}</span>
+                    <span class="result_correct_answer">{{ answers[i]['correct_answer'] }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="menu_btn_container">
+                <button id="menu_button" class="btn menu_btn" onclick="window.location.href='/main';">
+                    <i class="fas fa-bars"></i> Menu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('body').css('height', '');
+
+        $.ajax({
+            url: '/show-result',
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (response) {
+                console.log(response.user);
+                console.log(response.paths);
+            },
+            error: function (error) {
+                console.error('Error sending array:', error);
+            }
+        });
+    });
+</script>
+</body>
+</html>
